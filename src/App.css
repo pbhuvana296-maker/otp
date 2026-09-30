@@ -1,6 +1,6 @@
-/* =========================
+/* =========================================
    GLOBAL RESET
-========================= */
+========================================= */
 
 * {
   margin: 0;
@@ -16,26 +16,22 @@ body,
 }
 
 body {
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #08090d;
   color: #ffffff;
 }
 
 
-/* =========================
+/* =========================================
    MAIN CONTAINER
-========================= */
+========================================= */
 
 .container {
   width: 100%;
   min-height: 100vh;
 
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 
@@ -59,70 +55,92 @@ body {
 }
 
 
-/* =========================
-   BACKGROUND LIGHT EFFECT
-========================= */
+/* =========================================
+   BACKGROUND GLOW
+========================================= */
 
-.container::before {
-  content: "";
-
+.background-glow {
   position: absolute;
 
   width: 350px;
   height: 350px;
 
-  top: -150px;
-  left: -150px;
-
   border-radius: 50%;
 
-  background: rgba(255, 115, 0, 0.08);
-
-  filter: blur(80px);
+  filter: blur(100px);
 
   pointer-events: none;
+  z-index: 0;
 }
 
-.container::after {
-  content: "";
+.glow-one {
+  top: -130px;
+  left: -130px;
 
-  position: absolute;
+  background: rgba(168, 85, 247, 0.25);
+}
 
-  width: 350px;
-  height: 350px;
+.glow-two {
+  right: -130px;
+  bottom: -130px;
 
-  right: -150px;
-  bottom: -150px;
-
-  border-radius: 50%;
-
-  background: rgba(255, 0, 110, 0.08);
-
-  filter: blur(80px);
-
-  pointer-events: none;
+  background: rgba(249, 115, 22, 0.22);
 }
 
 
-/* =========================
+/* =========================================
+   MAIN TITLE
+========================================= */
+
+.main-title {
+  position: relative;
+  z-index: 5;
+
+  margin-bottom: 45px;
+
+  color: #ffffff;
+
+  font-size: 2.2rem;
+  font-weight: 800;
+
+  letter-spacing: 4px;
+  text-align: center;
+  text-transform: uppercase;
+
+  animation: titleAppear 0.7s ease;
+}
+
+@keyframes titleAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
    GLASS CARD
-========================= */
+========================================= */
 
 .glass-card {
-  width: 100%;
-  max-width: 420px;
-
-  padding: 42px 32px;
+  width: 90%;
+  max-width: 440px;
 
   position: relative;
-  z-index: 2;
+  z-index: 10;
+
+  padding: 42px 32px;
 
   text-align: center;
 
   border-radius: 24px;
 
   background: rgba(255, 255, 255, 0.055);
-
   border: 1px solid rgba(255, 255, 255, 0.12);
 
   backdrop-filter: blur(20px);
@@ -134,11 +152,6 @@ body {
 
   animation: cardAppear 0.6s ease;
 }
-
-
-/* =========================
-   CARD APPEAR ANIMATION
-========================= */
 
 @keyframes cardAppear {
   from {
@@ -153,155 +166,129 @@ body {
 }
 
 
-/* =========================
+/* =========================================
+   BRAND
+========================================= */
+
+.brand-name {
+  margin-bottom: 10px;
+
+  color: #ff9900;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  letter-spacing: 3px;
+}
+
+
+/* =========================================
    TITLE
-========================= */
+========================================= */
 
 .title {
-  margin-bottom: 12px;
-
-  font-size: 28px;
-  font-weight: 700;
-
-  letter-spacing: -0.5px;
+  margin-bottom: 10px;
 
   color: #ffffff;
+
+  font-size: 27px;
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
 }
 
 
-/* =========================
-   DESCRIPTION
-========================= */
-
-.description {
-  margin-bottom: 8px;
-
-  font-size: 16px;
-  font-weight: 600;
-
-  color: #ff8a00;
-}
-
-
-/* =========================
+/* =========================================
    SUB TEXT
-========================= */
+========================================= */
 
 .sub-text {
   margin-bottom: 30px;
 
-  font-size: 14px;
-
-  line-height: 1.6;
-
   color: rgba(255, 255, 255, 0.55);
+
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 
-/* =========================
-   HIDDEN OTP INPUT
-========================= */
-
-.hidden-otp-input {
-  position: absolute;
-
-  width: 1px;
-  height: 1px;
-
-  padding: 0;
-  margin: -1px;
-
-  border: 0;
-
-  opacity: 0;
-
-  outline: none;
-
-  overflow: hidden;
-
-  white-space: nowrap;
-
-  clip: rect(0, 0, 0, 0);
-}
-
-
-/* =========================
-   OTP BOX CONTAINER
-========================= */
+/* =========================================
+   OTP INPUT AREA
+========================================= */
 
 .otp-inputs {
   width: 100%;
 
   display: flex;
-
-  justify-content: center;
-
   align-items: center;
+  justify-content: center;
 
   gap: 10px;
 
   margin-bottom: 30px;
-
-  cursor: text;
 }
 
 
-/* =========================
+/* =========================================
    OTP BOX
-========================= */
+========================================= */
 
 .otp-box {
   width: 50px;
   height: 55px;
 
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
   flex-shrink: 0;
 
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 14px;
+  outline: none;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.025)
+  );
+
+  color: #ffffff;
 
   font-size: 22px;
   font-weight: 700;
 
-  color: #ffffff;
+  text-align: center;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.09),
-      rgba(255, 255, 255, 0.025)
-    );
-
-  border: 1px solid rgba(255, 255, 255, 0.15);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 8px 25px rgba(0, 0, 0, 0.2);
+  caret-color: #ff8a00;
 
   transition:
     border-color 0.25s ease,
     background 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.25s ease;
+    box-shadow 0.25s ease;
 }
 
 
-/* =========================
-   FILLED OTP EFFECT
-========================= */
+/* =========================================
+   OTP FOCUS
+========================================= */
 
-.otp-box:not(:empty) {
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 138, 0, 0.22),
-      rgba(255, 75, 0, 0.08)
-    );
+.otp-box:focus {
+  border-color: rgba(255, 138, 0, 0.8);
 
-  border-color: rgba(255, 138, 0, 0.65);
+  box-shadow:
+    0 0 20px rgba(255, 115, 0, 0.2);
+}
+
+
+/* =========================================
+   OTP FILLED
+========================================= */
+
+.otp-box.filled {
+  border-color: rgba(255, 138, 0, 0.7);
+
+  background: linear-gradient(
+    145deg,
+    rgba(255, 138, 0, 0.22),
+    rgba(255, 75, 0, 0.08)
+  );
 
   box-shadow:
     0 0 20px rgba(255, 115, 0, 0.18),
@@ -309,35 +296,35 @@ body {
 }
 
 
-/* =========================
-   OTP DIGIT ANIMATION
-========================= */
+/* =========================================
+   FILL CODE DIGIT ANIMATION
+========================================= */
 
-.otp-box:not(:empty) {
-  animation: digitPop 0.25s ease;
+.otp-box.filling {
+  animation: fillDigit 0.35s ease-out;
 }
 
-@keyframes digitPop {
+@keyframes fillDigit {
   0% {
     opacity: 0;
-    transform: scale(0.7) translateY(8px);
+    transform: translateY(-12px);
   }
 
-  70% {
+  60% {
     opacity: 1;
-    transform: scale(1.08) translateY(-2px);
+    transform: translateY(3px);
   }
 
   100% {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0);
   }
 }
 
 
-/* =========================
-   ERROR BORDER
-========================= */
+/* =========================================
+   ERROR BOX
+========================================= */
 
 .error-border {
   border-color: #ff3b5c !important;
@@ -345,49 +332,191 @@ body {
   background: rgba(255, 59, 92, 0.08) !important;
 
   box-shadow:
-    0 0 20px rgba(255, 59, 92, 0.2) !important;
+    0 0 20px rgba(255, 59, 92, 0.25) !important;
 }
 
 
-/* =========================
+/* =========================================
+   ERROR MESSAGE
+========================================= */
+
+.error-message {
+  margin-top: -18px;
+  margin-bottom: 20px;
+
+  color: #ff4d6d;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  animation: errorAppear 0.25s ease;
+}
+
+@keyframes errorAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
+   MESSAGE BOX
+========================================= */
+
+.message-box {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 15px;
+  margin-bottom: 22px;
+
+  text-align: left;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.035);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+
+/* =========================================
+   MESSAGE CONTENT
+========================================= */
+
+.message-content {
+  min-width: 0;
+}
+
+.message-title {
+  margin-bottom: 4px;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+.message-text {
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.bold-white {
+  color: #ffffff;
+  font-weight: 800;
+}
+
+
+/* =========================================
+   FILL CODE BUTTON
+========================================= */
+
+.fill-code-btn {
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 9px;
+
+  padding: 10px 15px;
+
+  background: linear-gradient(
+    135deg,
+    #ffad19,
+    #ff6a00
+  );
+
+  color: #000000;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 18px rgba(255, 100, 0, 0.2);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.fill-code-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 24px rgba(255, 100, 0, 0.3);
+
+  filter: brightness(1.08);
+}
+
+.fill-code-btn:active {
+  transform: translateY(0);
+}
+
+.fill-code-btn:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+
+  transform: none;
+  filter: none;
+}
+
+
+/* =========================================
    BUTTON GROUP
-========================= */
+========================================= */
 
 .button-group {
   width: 100%;
 
   display: flex;
-
   flex-direction: column;
 
   gap: 12px;
 }
 
 
-/* =========================
+/* =========================================
    VERIFY BUTTON
-========================= */
+========================================= */
 
 .verify-btn {
   width: 100%;
-
   height: 52px;
 
   border: none;
-
   border-radius: 14px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #ff9d00,
-      #ff5a00
-    );
+  background: linear-gradient(
+    135deg,
+    #ff9d00,
+    #ff5a00
+  );
 
   color: #ffffff;
 
   font-size: 15px;
-
   font-weight: 700;
 
   cursor: pointer;
@@ -401,7 +530,6 @@ body {
     filter 0.25s ease;
 }
 
-
 .verify-btn:hover {
   transform: translateY(-2px);
 
@@ -411,23 +539,20 @@ body {
   filter: brightness(1.08);
 }
 
-
 .verify-btn:active {
   transform: translateY(0);
 }
 
 
-/* =========================
-   RESEND BUTTON
-========================= */
+/* =========================================
+   GENERATE NEW OTP
+========================================= */
 
 .resend-btn {
   width: 100%;
-
   height: 48px;
 
   border: 1px solid rgba(255, 255, 255, 0.12);
-
   border-radius: 14px;
 
   background: rgba(255, 255, 255, 0.035);
@@ -435,7 +560,6 @@ body {
   color: rgba(255, 255, 255, 0.75);
 
   font-size: 14px;
-
   font-weight: 600;
 
   cursor: pointer;
@@ -446,7 +570,6 @@ body {
     color 0.25s ease,
     transform 0.25s ease;
 }
-
 
 .resend-btn:hover {
   background: rgba(255, 255, 255, 0.07);
@@ -459,18 +582,167 @@ body {
 }
 
 
-/* =========================
-   SUCCESS CARD
-========================= */
+/* =========================================
+   FINAL OTP CONTAINER
+========================================= */
 
-.success-card {
-  padding: 45px 32px;
+.final-otp-container {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 15px;
+  margin-bottom: 30px;
+
+  animation: finalOtpAppear 0.8s ease;
+}
+
+@keyframes finalOtpAppear {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 
-/* =========================
-   SUCCESS ICON
-========================= */
+/* =========================================
+   FINAL OTP NUMBER
+========================================= */
+
+.final-otp {
+  color: #fff3c4;
+
+  font-size: 30px;
+  font-weight: 800;
+
+  letter-spacing: 12px;
+
+  text-align: center;
+
+  padding-left: 12px;
+
+  text-shadow:
+    0 0 15px rgba(255, 138, 0, 0.5),
+    0 0 30px rgba(255, 170, 0, 0.25);
+
+  animation:
+    finalNumberAppear 0.8s
+    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes finalNumberAppear {
+  0% {
+    opacity: 0;
+
+    transform:
+      translateY(-25px)
+      scale(0.85);
+  }
+
+  60% {
+    opacity: 1;
+
+    transform:
+      translateY(5px)
+      scale(1.05);
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================================
+   FINAL OTP UNDERLINE
+========================================= */
+
+.final-underline {
+  width: 185px;
+  height: 4px;
+
+  margin-top: 10px;
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #ffd54a,
+    #ff7a00,
+    #ffd54a,
+    transparent
+  );
+
+  box-shadow:
+    0 0 10px rgba(255, 138, 0, 0.8),
+    0 0 22px rgba(255, 170, 0, 0.35);
+
+  animation:
+    underlineAppear 0.7s
+    ease 0.25s both;
+}
+
+@keyframes underlineAppear {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+
+  to {
+    opacity: 1;
+    width: 185px;
+  }
+}
+
+
+/* =========================================
+   SUCCESS CARD
+========================================= */
+
+.success-card {
+  padding: 45px 32px;
+
+  animation:
+    successCardAppear 0.7s
+    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes successCardAppear {
+  from {
+    opacity: 0;
+
+    transform:
+      scale(0.9)
+      translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      scale(1)
+      translateY(0);
+  }
+}
+
+
+/* =========================================
+   SUCCESS ICON CONTAINER
+========================================= */
 
 .success-icon-container {
   width: 78px;
@@ -485,17 +757,16 @@ body {
 
   border-radius: 50%;
 
-  background:
-    rgba(50, 220, 130, 0.12);
+  background: rgba(50, 220, 130, 0.12);
 
   border: 1px solid rgba(50, 220, 130, 0.3);
 
   box-shadow:
     0 0 35px rgba(50, 220, 130, 0.12);
 
-  animation: successPulse 1.5s ease infinite;
+  animation:
+    successPulse 1.5s ease infinite;
 }
-
 
 @keyframes successPulse {
   0% {
@@ -512,59 +783,84 @@ body {
 }
 
 
-/* =========================
-   SUCCESS SVG
-========================= */
+/* =========================================
+   SUCCESS ICON
+========================================= */
 
 .success-icon {
   width: 38px;
   height: 38px;
 
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
   color: #38df86;
+
+  font-size: 34px;
+  font-weight: 800;
 }
 
 
-/* =========================
+/* =========================================
+   SUCCESS TITLE
+========================================= */
+
+.success-card .title {
+  color: #fff3c4;
+
+  text-shadow:
+    0 0 15px rgba(255, 213, 74, 0.25);
+}
+
+
+/* =========================================
    SUCCESS TEXT
-========================= */
+========================================= */
 
 .success-text {
   margin-top: 8px;
-
   margin-bottom: 28px;
 
-  font-size: 16px;
+  padding: 10px 14px;
 
+  border-radius: 10px;
+
+  color: #fff3c4;
+
+  font-size: 16px;
   font-weight: 600;
 
-  color: #38df86;
+  background: rgba(255, 213, 74, 0.06);
+
+  border: 1px solid rgba(255, 213, 74, 0.15);
+
+  box-shadow:
+    0 0 18px rgba(255, 213, 74, 0.06);
 }
 
 
-/* =========================
+/* =========================================
    CONTINUE BUTTON
-========================= */
+========================================= */
 
 .continue-btn {
   width: 100%;
-
   height: 52px;
 
   border: none;
-
   border-radius: 14px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #38df86,
-      #19b968
-    );
+  background: linear-gradient(
+    135deg,
+    #38df86,
+    #19b968
+  );
 
   color: #ffffff;
 
   font-size: 15px;
-
   font-weight: 700;
 
   cursor: pointer;
@@ -577,7 +873,6 @@ body {
     box-shadow 0.25s ease;
 }
 
-
 .continue-btn:hover {
   transform: translateY(-2px);
 
@@ -585,19 +880,28 @@ body {
     0 14px 30px rgba(50, 220, 130, 0.28);
 }
 
+.continue-btn:active {
+  transform: translateY(0);
+}
 
-/* =========================
+
+/* =========================================
    TABLET
-========================= */
+========================================= */
 
 @media (max-width: 600px) {
   .container {
-    padding: 20px 15px;
+    padding: 25px 15px;
+  }
+
+  .main-title {
+    font-size: 1.7rem;
+    letter-spacing: 3px;
+    margin-bottom: 35px;
   }
 
   .glass-card {
     max-width: 390px;
-
     padding: 35px 24px;
   }
 
@@ -612,20 +916,34 @@ body {
   .otp-box {
     width: 48px;
     height: 52px;
-
     font-size: 20px;
+  }
+
+  .final-otp {
+    font-size: 27px;
+    letter-spacing: 10px;
   }
 }
 
 
-/* =========================
+/* =========================================
    MOBILE
-========================= */
+========================================= */
 
 @media (max-width: 400px) {
-  .glass-card {
-    padding: 30px 18px;
+  .container {
+    padding: 20px 10px;
+  }
 
+  .main-title {
+    font-size: 1.35rem;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+  }
+
+  .glass-card {
+    width: 94%;
+    padding: 30px 18px;
     border-radius: 20px;
   }
 
@@ -635,7 +953,6 @@ body {
 
   .sub-text {
     font-size: 13px;
-
     margin-bottom: 25px;
   }
 
@@ -646,25 +963,39 @@ body {
   .otp-box {
     width: 43px;
     height: 49px;
-
     border-radius: 11px;
-
     font-size: 19px;
   }
 
-  .verify-btn {
-    height: 49px;
+  .message-box {
+    padding: 12px;
+    gap: 8px;
   }
 
-  .resend-btn {
-    height: 46px;
+  .message-text {
+    font-size: 10px;
+  }
+
+  .fill-code-btn {
+    padding: 9px 11px;
+    font-size: 10px;
+  }
+
+  .final-otp {
+    font-size: 24px;
+    letter-spacing: 8px;
+    padding-left: 8px;
+  }
+
+  .final-underline {
+    width: 160px;
   }
 }
 
 
-/* =========================
+/* =========================================
    VERY SMALL MOBILE
-========================= */
+========================================= */
 
 @media (max-width: 340px) {
   .glass-card {
@@ -679,7 +1010,16 @@ body {
   .otp-box {
     width: 39px;
     height: 46px;
-
     font-size: 18px;
+  }
+
+  .final-otp {
+    font-size: 21px;
+    letter-spacing: 6px;
+    padding-left: 6px;
+  }
+
+  .final-underline {
+    width: 140px;
   }
 }

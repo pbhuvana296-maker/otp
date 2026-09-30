@@ -1,117 +1,541 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from "react";
+import "./App.css";
 
 export default function App() {
-  const [otp, setOtp] = useState(['', '', '', '']);
-  const [generatedOtp, setGeneratedOtp] = useState('----');
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [generatedOtp, setGeneratedOtp] = useState("");
   const [isVerified, setIsVerified] = useState(false);
-  const inputRefs = [useRef(), useRef(), useRef(), useRef()];
+
+  const [error, setError] = useState(false);
+  const [isFilling, setIsFilling] = useState(false);
+  const [showFinalOtp, setShowFinalOtp] = useState(false);
+
+  const inputRefs = useRef([]);
+
+  /* =========================================
+     GENERATE OTP
+  ========================================= */
 
   const generateDynamicOTP = () => {
-    const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
+    const newOtp = Math.floor(
+      1000 + Math.random() * 9000
+    ).toString();
+
     setGeneratedOtp(newOtp);
-    setOtp(['', '', '', '']);
+    setOtp(["", "", "", ""]);
+
     setIsVerified(false);
+    setError(false);
+    setIsFilling(false);
+    setShowFinalOtp(false);
+
+    setTimeout(() => {
+      inputRefs.current[0]?.focus();
+    }, 100);
   };
+
+
+  /* =========================================
+     INITIAL OTP
+  ========================================= */
 
   useEffect(() => {
     generateDynamicOTP();
   }, []);
 
-  const handleChange = (value, index) => {
-    const cleanValue = value.replace(/[^0-9]/g, '');
-    const newOtp = [...otp];
-    newOtp[index] = cleanValue;
-    setOtp(newOtp);
 
-    if (cleanValue && index < 3) {
-      inputRefs[index + 1].current.focus();
+  /* =========================================
+     NORMAL OTP TYPING
+  ========================================= */
+
+  const handleChange = (value, index) => {
+    if (isFilling) return;
+
+    const cleanValue = value.replace(/\D/g, "");
+
+    if (!cleanValue) {
+      const updatedOtp = [...otp];
+      updatedOtp[index] = "";
+
+      setOtp(updatedOtp);
+      return;
+    }
+
+    const updatedOtp = [...otp];
+
+    updatedOtp[index] = cleanValue.slice(-1);
+
+    setOtp(updatedOtp);
+    setError(false);
+
+    if (index < 3) {
+      inputRefs.current[index + 1]?.focus();
     }
   };
+
+
+  /* =========================================
+     BACKSPACE
+  ========================================= */
 
   const handleKeyDown = (e, index) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      inputRefs[index - 1].current.focus();
+    if (isFilling) return;
+
+    if (e.key === "Backspace") {
+
+      if (otp[index]) {
+        const updatedOtp = [...otp];
+
+        updatedOtp[index] = "";
+
+        setOtp(updatedOtp);
+
+        return;
+      }
+
+      if (index > 0) {
+        const updatedOtp = [...otp];
+
+        updatedOtp[index - 1] = "";
+
+        setOtp(updatedOtp);
+
+        inputRefs.current[index - 1]?.focus();
+      }
     }
   };
 
-  useEffect(() => {
-    const enteredOtp = otp.join('');
-    if (enteredOtp.length === 4) {
-      if (enteredOtp === generatedOtp) {
-        setTimeout(() => { setIsVerified(true); }, 400);
-      } else {
-        alert("தவறான OTP! மெசேஜில் உள்ள எண்ணைப் பார்க்கவும்.");
-        setOtp(['', '', '', '']);
-        inputRefs[0].current.focus();
-      }
+
+  /* =========================================
+     PASTE OTP
+  ========================================= */
+
+  const handlePaste = (e) => {
+    if (isFilling) return;
+
+    e.preventDefault();
+
+    const pastedValue = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 4);
+
+    if (!pastedValue) return;
+
+    const updatedOtp = ["", "", "", ""];
+
+    pastedValue
+      .split("")
+      .forEach((digit, index) => {
+        updatedOtp[index] = digit;
+      });
+
+    setOtp(updatedOtp);
+    setError(false);
+
+    setTimeout(() => {
+      inputRefs.current[
+        Math.min(pastedValue.length, 3)
+      ]?.focus();
+    }, 50);
+  };
+
+
+  /* =========================================
+     FILL CODE ANIMATION
+  ========================================= */
+
+  const fillCode = async () => {
+    if (isFilling) return;
+
+    setIsFilling(true);
+    setError(false);
+    setShowFinalOtp(false);
+
+    const digits = generatedOtp.split("");
+
+    /* -----------------------------------------
+       STEP 1
+       FIRST DIGIT
+    ----------------------------------------- */
+
+    setOtp(["", "", "", ""]);
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, 300)
+    );
+
+    setOtp([
+      digits[0],
+      "",
+      "",
+      ""
+    ]);
+
+
+    /* -----------------------------------------
+       STEP 2
+       SECOND DIGIT
+    ----------------------------------------- */
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, 450)
+    );
+
+    setOtp([
+      digits[0],
+      digits[1],
+      "",
+      ""
+    ]);
+
+
+    /* -----------------------------------------
+       STEP 3
+       THIRD DIGIT
+    ----------------------------------------- */
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, 450)
+    );
+
+    setOtp([
+      digits[0],
+      digits[1],
+      digits[2],
+      ""
+    ]);
+
+
+    /* -----------------------------------------
+       STEP 4
+       FOURTH DIGIT
+    ----------------------------------------- */
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, 450)
+    );
+
+    setOtp([
+      digits[0],
+      digits[1],
+      digits[2],
+      digits[3]
+    ]);
+
+
+    /* -----------------------------------------
+       WAIT AFTER ALL 4 BOXES ARE FILLED
+    ----------------------------------------- */
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, 900)
+    );
+
+
+    /* -----------------------------------------
+       REMOVE BOXES
+    ----------------------------------------- */
+
+    setShowFinalOtp(true);
+
+
+    /* -----------------------------------------
+       WAIT FOR FINAL OTP
+    ----------------------------------------- */
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, 1300)
+    );
+
+
+    /* -----------------------------------------
+       SUCCESS
+    ----------------------------------------- */
+
+    setIsVerified(true);
+    setIsFilling(false);
+  };
+
+
+  /* =========================================
+     MANUAL VERIFY
+  ========================================= */
+
+  const verifyOtp = () => {
+    if (isFilling) return;
+
+    const enteredOtp = otp.join("");
+
+    if (enteredOtp.length !== 4) {
+      setError(true);
+      return;
     }
-  }, [otp, generatedOtp]);
+
+    if (enteredOtp === generatedOtp) {
+      setIsVerified(true);
+    } else {
+      setError(true);
+
+      setTimeout(() => {
+        setOtp(["", "", "", ""]);
+        inputRefs.current[0]?.focus();
+      }, 700);
+    }
+  };
+
+
+  /* =========================================
+     AUTO VERIFY MANUAL OTP
+  ========================================= */
+
+  useEffect(() => {
+    if (isFilling) return;
+
+    const enteredOtp = otp.join("");
+
+    if (enteredOtp.length !== 4) return;
+
+    if (enteredOtp === generatedOtp) {
+      setTimeout(() => {
+        setIsVerified(true);
+      }, 400);
+    }
+  }, [otp, generatedOtp, isFilling]);
+
+
+  /* =========================================
+     UI
+  ========================================= */
 
   return (
-    <div style={styles.body}>
-      <div style={{ ...styles.neonBlob, ...styles.blobPurple }}></div>
-      <div style={{ ...styles.neonBlob, ...styles.blobOrange }}></div>
-      <h1 style={styles.mainTitle}>OTP VERIFICATION</h1>
+    <div className="container">
+
+      {/* BACKGROUND GLOW */}
+      <div className="background-glow glow-one"></div>
+      <div className="background-glow glow-two"></div>
+
+
+      {/* MAIN TITLE */}
+      <h1 className="main-title">
+        OTP VERIFICATION
+      </h1>
+
 
       {!isVerified ? (
-        <div style={styles.glassCard}>
-          <div style={styles.brandName}>Google</div>
-          <h2 style={styles.heading}>ENTER PIN:</h2>
-          <p style={styles.subheading}>Enter the 4-Digit Code...</p>
-          <div style={styles.otpContainer}>
-            {otp.map((val, idx) => (
-              <input
-                key={idx}
-                ref={inputRefs[idx]}
-                type="text"
-                maxLength="1"
-                value={val}
-                onChange={(e) => handleChange(e.target.value, idx)}
-                onKeyDown={(e) => handleKeyDown(e, idx)}
-                style={styles.otpBox}
-              />
-            ))}
+
+        /* =====================================
+           OTP CARD
+        ===================================== */
+
+        <div className="glass-card">
+
+          {/* BRAND */}
+          <div className="brand-name">
+            GOOGLE
           </div>
-          <div style={styles.messageBox}>
-            <div>
-              <div style={styles.messageTitle}>Message</div>
-              <div style={styles.messageText}>
-                GOOGLE Verification Code is <span style={styles.boldWhite}>{generatedOtp}</span>
-              </div>
+
+
+          {/* HEADING */}
+          <h2 className="title">
+            ENTER PIN
+          </h2>
+
+
+          <p className="sub-text">
+            Enter the 4-Digit Code
+          </p>
+
+
+          {/* =================================
+              OTP BOXES
+          ================================= */}
+
+          {!showFinalOtp && (
+
+            <div className="otp-inputs">
+
+              {otp.map((value, index) => (
+
+                <input
+                  key={index}
+                  ref={(element) => {
+                    inputRefs.current[index] = element;
+                  }}
+                  className={`otp-box ${
+                    value ? "filled" : ""
+                  } ${
+                    error ? "error-border" : ""
+                  } ${
+                    isFilling ? "filling" : ""
+                  }`}
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={1}
+                  value={value}
+                  disabled={isFilling}
+                  onChange={(e) =>
+                    handleChange(
+                      e.target.value,
+                      index
+                    )
+                  }
+                  onKeyDown={(e) =>
+                    handleKeyDown(e, index)
+                  }
+                  onPaste={handlePaste}
+                />
+
+              ))}
+
             </div>
-            <button style={styles.neonBtnOrange} onClick={() => setOtp(generatedOtp.split(''))}>Fill Code</button>
-          </div>
+
+          )}
+
+
+          {/* =================================
+              FINAL OTP
+          ================================= */}
+
+          {showFinalOtp && (
+
+            <div className="final-otp-container">
+
+              <div className="final-otp">
+                {generatedOtp}
+              </div>
+
+              <div className="final-underline"></div>
+
+            </div>
+
+          )}
+
+
+          {/* ERROR */}
+          {error && !isFilling && (
+
+            <div className="error-message">
+              Invalid OTP. Please try again.
+            </div>
+
+          )}
+
+
+          {/* =================================
+              MESSAGE BOX
+          ================================= */}
+
+          {!showFinalOtp && (
+
+            <div className="message-box">
+
+              <div className="message-content">
+
+                <div className="message-title">
+                  MESSAGE
+                </div>
+
+                <div className="message-text">
+                  GOOGLE Verification Code is{" "}
+                  <span className="bold-white">
+                    {generatedOtp}
+                  </span>
+                </div>
+
+              </div>
+
+
+              {/* FILL CODE */}
+              <button
+                className="fill-code-btn"
+                type="button"
+                disabled={isFilling}
+                onClick={fillCode}
+              >
+                {isFilling
+                  ? "Filling..."
+                  : "Fill Code"}
+              </button>
+
+            </div>
+
+          )}
+
+
+          {/* =================================
+              NORMAL BUTTONS
+          ================================= */}
+
+          {!isFilling &&
+            !showFinalOtp && (
+
+              <div className="button-group">
+
+                <button
+                  className="verify-btn"
+                  type="button"
+                  onClick={verifyOtp}
+                >
+                  Verify OTP
+                </button>
+
+
+                <button
+                  className="resend-btn"
+                  type="button"
+                  onClick={generateDynamicOTP}
+                >
+                  Generate New OTP
+                </button>
+
+              </div>
+
+            )}
+
         </div>
+
       ) : (
-        <div style={styles.glassCard}>
-          <div style={styles.successIconContainer}><div style={styles.successGlow}>✓</div></div>
-          <h2 style={{ ...styles.heading, marginBottom: '0.5rem' }}>Number Verified</h2>
-          <p style={{ ...styles.subheading, marginBottom: '2rem' }}>You are logged in on this device.</p>
-          <button style={styles.neonBtnSuccess} onClick={generateDynamicOTP}>Continue</button>
+
+        /* =====================================
+           SUCCESS CARD
+        ===================================== */
+
+        <div className="glass-card success-card">
+
+          <div className="success-icon-container">
+
+            <div className="success-icon">
+              ✓
+            </div>
+
+          </div>
+
+
+          <h2 className="title">
+            Number Verified
+          </h2>
+
+
+          <p className="success-text">
+            You are logged in on this device.
+          </p>
+
+
+          <button
+            className="continue-btn"
+            type="button"
+            onClick={generateDynamicOTP}
+          >
+            Continue
+          </button>
+
         </div>
+
       )}
+
     </div>
   );
 }
 
-const styles = {
-  body: { background: 'radial-gradient(circle at center, #0d0d15 0%, #050508 100%)', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh', position: 'relative', userSelect: 'none' },
-  neonBlob: { position: 'absolute', width: '300px', height: '300px', borderRadius: '50%', filter: 'blur(80px)', opacity: 0.3, zIndex: 0 },
-  blobPurple: { background: '#a855f7', top: '20%', left: '25%' },
-  blobOrange: { background: '#f97316', bottom: '20%', right: '25%' },
-  mainTitle: { color: '#ffffff', fontSize: '2.2rem', fontWeight: '800', letterSpacing: '4px', textTransform: 'uppercase', marginBottom: '3rem', zIndex: 10, textAlign: 'center' },
-  glassCard: { background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.5)', width: '90%', maxWidth: '440px', borderRadius: '1rem', padding: '2rem', textAlign: 'center', zIndex: 10 },
-  brandName: { color: '#ff9900', fontSize: '0.75rem', fontWeight: '700', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.5rem' },
-  heading: { color: '#ffffff', fontSize: '1.25rem', fontWeight: '700', letterSpacing: '1px', marginBottom: '0.25rem' },
-  subheading: { color: '#9ca3af', fontSize: '0.75rem', marginBottom: '2rem' },
-  otpContainer: { display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' },
-  otpBox: { width: '3.5rem', height: '3.5rem', borderRadius: '0.75rem', textAlign: 'center', color: '#ffffff', fontSize: '1.5rem', fontWeight: '700', outline: 'none', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)' },
-  messageBox: { background: 'rgba(255, 255, 255, 0.02)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '0.75rem', padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', textAlign: 'left' },
-  messageTitle: { color: '#ffffff', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.125rem' },
-  messageText: { color: '#9ca3af', fontSize: '0.75rem', letterSpacing: '0.5px' },
-  boldWhite: { color: '#ffffff', fontWeight: '700' },
-  neonBtnOrange: { background: '#ff9900', color: '#000000', fontWeight: '700', fontSize: '0.75rem', padding: '0.625rem 1rem', border: 'none', borderRadius: '0.5rem', cursor: 'pointer' },
-  neonBtnSuccess: { width: '100%', background: 'transparent', color: '#2ea44f', fontWeight: '700', padding: '0.75rem 1.5rem', border: '1px solid #2ea44f', borderRadius: '0.5rem', cursor: 'pointer', letterSpacing: '1px' },
-  successIconContainer: { display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' },
-  successGlow: { width: '4rem', height: '4rem', borderRadius: '50%', border: '2px solid #2ea44f', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#2ea44f', fontSize: '1.5rem', fontWeight: '700', background: 'rgba(46, 164, 79, 0.1)', boxShadow: '0 0 20px rgba(46, 164, 79, 0.4)' }
-};
